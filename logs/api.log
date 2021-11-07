@@ -1,0 +1,2 @@
+2021-11-07 19:53:36,500:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'founded_date': ['Missing data for required field.']}}
+2021-11-07 19:54:31,103:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'founded_date': ['Missing data for required field.']}}

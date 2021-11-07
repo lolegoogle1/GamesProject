@@ -1,5 +1,4 @@
 from flask import Flask, jsonify
-from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_cors import CORS
 from .config import Config
 from flask_jwt_extended import JWTManager
@@ -8,6 +7,8 @@ from sqlalchemy_utils import create_database, database_exists
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
+# Logging
+import logging
 
 
 app = Flask(__name__)
@@ -39,6 +40,25 @@ cors = CORS(resources={
 })
 
 
+# -------------- Logging ----------------
+def setup_logger():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter(
+        '%(asctime)s:%(levelname)s:%(message)s'
+    )
+    file_handler = logging.FileHandler('logs/api.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
+
+
+logger = setup_logger()
+# --------------------------------------
+
+
 @app.route('/')
 def index():
     return 'Index Page'
@@ -53,7 +73,7 @@ def shutdown_session(exception=None):
 def error_handler(error):
     headers = error.data.get('headers', None)
     messages = error.data.get('messages', ['Invalid request'])
-    # logger.warning(f'Invalid input params: {messages}')
+    logger.warning(f'Invalid input params: {messages}')
     if headers:
         return jsonify({'message': messages}), 400, headers
     else:
