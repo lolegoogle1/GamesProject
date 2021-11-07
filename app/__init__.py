@@ -10,7 +10,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -25,7 +24,7 @@ def get_engine(url):
     return engine_obj
 
 
-engine = get_engine('DB_URI')
+engine = get_engine('DB_NAME')
 
 session = scoped_session(sessionmaker(
     autoflush=False, autocommit=False, bind=engine))
@@ -38,11 +37,6 @@ jwt = JWTManager(app)
 cors = CORS(resources={
     r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS}
 })
-
-
-from .models import *
-
-Base.metadata.create_all(bind=engine)
 
 
 @app.route('/')

@@ -19,7 +19,7 @@ class User(Base):
 class Company(Base):
     __tablename__ = 'companies'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     description = Column(String)
     founded_date = Column(Date, nullable=False)
@@ -48,10 +48,13 @@ class Company(Base):
             raise
 
     def update(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        print(self)
-        session.commit()
+        try:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
 
     def save(self):
         try:
