@@ -24,7 +24,7 @@ def get_engine(url):
     return engine_obj
 
 
-engine = get_engine('DB_NAME')
+engine = Config.SQLALCHEMY_DATABASE_URI
 
 session = scoped_session(sessionmaker(
     autoflush=False, autocommit=False, bind=engine))
