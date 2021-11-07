@@ -1,6 +1,7 @@
 from .. import logger
 from flask import jsonify, Blueprint
 from flask_apispec import marshal_with, use_kwargs
+from flask_jwt_extended import jwt_required
 
 from ..models import Company
 from ..schemas import CompanySchema
@@ -23,6 +24,7 @@ def get_companies():
 
 
 @api.route('/companies', methods=['POST'])
+@jwt_required()
 @use_kwargs(CompanySchema)
 @marshal_with(CompanySchema)
 def create_company(**kwargs):
@@ -38,6 +40,7 @@ def create_company(**kwargs):
 
 
 @api.route('/companies/<int:company_id>', methods=['PUT'])
+@jwt_required()
 @use_kwargs(CompanySchema)
 @marshal_with(CompanySchema)
 def update_company(company_id, **kwargs):
@@ -54,6 +57,7 @@ def update_company(company_id, **kwargs):
 
 
 @api.route('/companies/<int:company_id>', methods=['DELETE'])
+@jwt_required()
 @marshal_with(CompanySchema)
 def delete_company(company_id):
     try:

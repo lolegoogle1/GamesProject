@@ -1,8 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from .config import Config
 from flask_jwt_extended import JWTManager
-
+# DB imports
 from sqlalchemy_utils import create_database, database_exists
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -10,13 +9,16 @@ from sqlalchemy.ext.declarative import declarative_base
 # Logging
 import logging
 
-
+from .config import Config
+# ---------- Initial flask config ---------#
 app = Flask(__name__)
 app.config.from_object(Config)
 
 client = app.test_client()
+# -----------------------------------------#
 
 
+# ---------- Initial sqlalchemy config ---------#
 def get_engine(url):
     if not database_exists(url):
         create_database(url)
@@ -25,50 +27,51 @@ def get_engine(url):
     return engine_obj
 
 
-engine = Config.SQLALCHEMY_DATABASE_URI
+engine = get_engine('DB_NAME')
 
 session = scoped_session(sessionmaker(
     autoflush=False, autocommit=False, bind=engine))
 
 Base = declarative_base()
 Base.query = session.query_property()
+# ----------------------------------------------#
 
-jwt = JWTManager(app)
+# ---------- JWT and cors config ---------#
+jwt = JWTManager()
 
 cors = CORS(resources={
     r"/*": {"origins": Config.CORS_ALLOWED_ORIGINS}
 })
+# -----------------------------------------#
 
 
-# -------------- Logging ----------------
+# -------------- Logging ------------------#
 def setup_logger():
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         '%(asctime)s:%(levelname)s:%(message)s'
     )
     file_handler = logging.FileHandler('logs/api.log')
     file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    log.addHandler(file_handler)
 
-    return logger
+    return log
 
 
 logger = setup_logger()
-# --------------------------------------
+# -----------------------------------------#
 
 
+# -------------- Main page ------------------#
 @app.route('/')
 def index():
     return 'Index Page'
+# -----------------------------------------#
 
 
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    session.remove()
-
-
+# -------------- Main error handler ------------------#
 @app.errorhandler(422)
 def error_handler(error):
     headers = error.data.get('headers', None)
@@ -78,13 +81,21 @@ def error_handler(error):
         return jsonify({'message': messages}), 400, headers
     else:
         return jsonify({'message': messages}), 400
+# -----------------------------------------#
 
 
+# -------------- session handling --------------------#
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     session.remove()
+# --------------------------------------------------#
 
 
+# -------------- Blueprints registration ------------------#
 from .companies.companies import api
+from .users.users import users
 
+app.register_blueprint(users, url_prefix='/users')
 app.register_blueprint(api, url_prefix='/api')
+# ---------------------------------------------------------#
+jwt.init_app(app)

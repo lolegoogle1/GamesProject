@@ -1,5 +1,10 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, Text
 from sqlalchemy.orm import relationship
+# TokenManagement
+from flask_jwt_extended import create_access_token
+from datetime import timedelta
+from passlib.hash import bcrypt
+
 
 from . import Base, session
 
@@ -8,12 +13,38 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    login = Column(String, nullable=False)
-
+    login = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     type = Column(String)
 
     reviews = relationship("Review", back_populates="user")
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name')
+        self.login = kwargs.get('login')
+        self.password = bcrypt.hash(kwargs.get('password'))
+
+    def get_token(self, expire_time=24):
+        expire_time = timedelta(expire_time)
+        access_token = create_access_token(
+            identity=self.id, expires_delta=expire_time
+        )
+        return access_token
+
+    @classmethod
+    def authenticate(cls, login, password):
+        user = cls.query.filter(cls.login == login).one()
+        if not bcrypt.verify(password, user.password):
+            raise Exception('Wrong credentials. Please check Your login and password')
+        return user
+
+    def save(self):
+        try:
+            session.add(self)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
 
 
 class Company(Base):

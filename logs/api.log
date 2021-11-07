@@ -1,2 +1,13 @@
 2021-11-07 19:53:36,500:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'founded_date': ['Missing data for required field.']}}
 2021-11-07 19:54:31,103:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'founded_date': ['Missing data for required field.']}}
+2021-11-07 20:39:50,371:WARNING:Signup failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
+2021-11-07 20:42:52,382:WARNING:Signup failed with errors: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "users_login_key"
+DETAIL:  Key (login)=(lolegoogle) already exists.
+
+[SQL: INSERT INTO users (login, password, type) VALUES (%(login)s, %(password)s, %(type)s) RETURNING users.id]
+[parameters: {'login': 'lolegoogle', 'password': '$2b$12$r.OwYsx.qhmGpZNkLf5tvO2Dsc2porvx.tG2/egC67GNrpZOaBcsm', 'type': None}]
+(Background on this error at: https://sqlalche.me/e/14/gkpj)
+2021-11-07 21:34:24,598:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
+2021-11-07 21:35:50,770:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
+2021-11-07 21:37:00,089:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
+2021-11-07 21:48:25,387:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
