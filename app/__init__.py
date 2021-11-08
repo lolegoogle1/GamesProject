@@ -27,7 +27,7 @@ def get_engine(url):
     return engine_obj
 
 
-engine = get_engine('DB_NAME')
+engine = get_engine('postgresql://lolegoogle:566510030912@localhost:5432/GameProject')
 
 session = scoped_session(sessionmaker(
     autoflush=False, autocommit=False, bind=engine))
