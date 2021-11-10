@@ -8,6 +8,10 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 # Logging
 import logging
+# docs
+# from flask_apispec.extension import FlaskApiSpec
+# from apispec import APISpec
+# from apispec.ext.marshmallow import MarshmallowPlugin
 
 from .config import Config
 # ---------- Initial flask config ---------#
@@ -39,6 +43,21 @@ session = scoped_session(sessionmaker(
 
 Base = declarative_base()
 Base.query = session.query_property()
+# ----------------------------------------------#
+
+# ---------- Documentation config ---------#
+"""docs = FlaskApiSpec()
+
+app.config.update({
+    'APISPEC_SPEC': APISpec(
+        title='GameProject',
+        version='v1',
+        openapi_version='3.0.0',
+        plugins=[MarshmallowPlugin()]
+    ),
+    'APISPEC_SWAGGER_URL': '/swagger/',
+    'APISPEC_SWAGGER_UI_URL': '/'
+})"""
 # ----------------------------------------------#
 
 # ---------- JWT and cors config ---------#
@@ -104,3 +123,4 @@ app.register_blueprint(users, url_prefix='/users')
 app.register_blueprint(api, url_prefix='/api')
 # ---------------------------------------------------------#
 jwt.init_app(app)
+# docs.init_app(app)

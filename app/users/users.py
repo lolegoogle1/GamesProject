@@ -9,6 +9,7 @@ from ..schemas import UserSchema, AuthSchema
 users = Blueprint('users', __name__)
 
 
+# @doc(tags=['user'])
 @users.route('/login', methods=['POST'])
 @use_kwargs(UserSchema(only=('login', 'password')))
 @marshal_with(AuthSchema)
@@ -24,6 +25,7 @@ def login(**kwargs):
     return {'access_token': access_token}
 
 
+# @doc(tags=['user'])
 @users.route('/signup', methods=['POST'])
 @use_kwargs(UserSchema)
 @marshal_with(AuthSchema)
@@ -49,3 +51,8 @@ def error_handler(error):
         return jsonify({'message': messages}), 400, headers
     else:
         return jsonify({'message': messages}), 400
+
+
+# docs.register(signup, blueprint='users')
+# docs.register(login, blueprint='users')
+

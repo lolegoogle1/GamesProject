@@ -1,15 +1,16 @@
-from .. import logger
 from flask import jsonify, Blueprint
 from flask_apispec import marshal_with, use_kwargs
 from flask_jwt_extended import jwt_required
 
 from ..models import Company
 from ..schemas import CompanySchema
+from .. import logger
 
 
 api = Blueprint('api', __name__)
 
 
+# @doc(tags=['companies'])
 @api.route('/companies', methods=['GET'])
 @marshal_with(CompanySchema(many=True))
 def get_companies():
@@ -23,6 +24,7 @@ def get_companies():
     return companies
 
 
+# @doc(tags=['companies'])
 @api.route('/companies', methods=['POST'])
 @jwt_required()
 @use_kwargs(CompanySchema)
@@ -39,6 +41,7 @@ def create_company(**kwargs):
     return new_company
 
 
+# @doc(tags=['companies'])
 @api.route('/companies/<int:company_id>', methods=['PUT'])
 @jwt_required()
 @use_kwargs(CompanySchema)
@@ -56,6 +59,7 @@ def update_company(company_id, **kwargs):
     return item
 
 
+# @doc(tags=['companies'])
 @api.route('/companies/<int:company_id>', methods=['DELETE'])
 @jwt_required()
 @marshal_with(CompanySchema)
@@ -80,3 +84,9 @@ def error_handler(error):
         return jsonify({'message': messages}), 400, headers
     else:
         return jsonify({'message': messages}), 400
+
+
+# docs.register(get_companies, blueprint='api')
+# docs.register(update_company, blueprint='api')
+# docs.register(create_company, blueprint='api')
+# docs.register(delete_company, blueprint='api')
