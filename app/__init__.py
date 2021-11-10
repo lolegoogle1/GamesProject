@@ -27,7 +27,12 @@ def get_engine(url):
     return engine_obj
 
 
-engine = get_engine('postgresql://lolegoogle:566510030912@localhost:5432/GameProject')
+# --------------- localhost ---------------
+engine = get_engine('postgresql://postgres:566510030912@localhost:5432/GameProject')
+
+# -----------------Docker -----------------
+# Switch to the SQLDB_URI in config.py and alembic.ini for further work with Docker
+# engine = create_engine(Config.ENGINE_URI)
 
 session = scoped_session(sessionmaker(
     autoflush=False, autocommit=False, bind=engine))

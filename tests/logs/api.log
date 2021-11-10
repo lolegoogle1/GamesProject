@@ -18,3 +18,5 @@ LINE 1: INSERT INTO users (login, password, type) VALUES ('test', '$...
 [SQL: INSERT INTO users (login, password, type) VALUES (%(login)s, %(password)s, %(type)s) RETURNING users.id]
 [parameters: {'login': 'test', 'password': '$2b$12$U3dk/wYxBiAoL9A7vUWgYeWPk05cQD4am7j2qvsBNcWy0kWnSPmo6', 'type': None}]
 (Background on this error at: https://sqlalche.me/e/14/f405)
+2021-11-10 13:51:10,585:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"
+2021-11-10 13:52:04,189:WARNING:Login failed with errors: JWT_SECRET_KEY or flask SECRET_KEY must be set when using symmetric algorithm "HS256"

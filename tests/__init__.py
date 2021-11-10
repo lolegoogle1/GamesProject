@@ -1,0 +1,1 @@
+all = ['test_user_model', 'test_company_model']
