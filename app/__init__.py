@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 # DB imports
@@ -8,10 +8,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 # Logging
 import logging
-# docs
-# from flask_apispec.extension import FlaskApiSpec
-# from apispec import APISpec
-# from apispec.ext.marshmallow import MarshmallowPlugin
+
 
 from .config import Config
 # ---------- Initial flask config ---------#
@@ -45,21 +42,6 @@ Base = declarative_base()
 Base.query = session.query_property()
 # ----------------------------------------------#
 
-# ---------- Documentation config ---------#
-"""docs = FlaskApiSpec()
-
-app.config.update({
-    'APISPEC_SPEC': APISpec(
-        title='GameProject',
-        version='v1',
-        openapi_version='3.0.0',
-        plugins=[MarshmallowPlugin()]
-    ),
-    'APISPEC_SWAGGER_URL': '/swagger/',
-    'APISPEC_SWAGGER_UI_URL': '/'
-})"""
-# ----------------------------------------------#
-
 # ---------- JWT and cors config ---------#
 jwt = JWTManager()
 
@@ -89,6 +71,8 @@ logger = setup_logger()
 
 
 # -------------- Main page ------------------#
+
+
 @app.route('/')
 def index():
     return 'Index Page'
@@ -116,11 +100,21 @@ def shutdown_session(exception=None):
 
 
 # -------------- Blueprints registration ------------------#
-from .companies.companies import api
+from .companies.companies import companies
 from .users.users import users
+from .games.games import games
+api = Blueprint('api', __name__, url_prefix='/api')
 
-app.register_blueprint(users, url_prefix='/users')
-app.register_blueprint(api, url_prefix='/api')
+api.register_blueprint(users)
+api.register_blueprint(companies)
+api.register_blueprint(games)
+
+app.register_blueprint(api)
 # ---------------------------------------------------------#
 jwt.init_app(app)
-# docs.init_app(app)
+
+
+"""parent = Blueprint('parent', __name__, url_prefix='/parent')
+child = Blueprint('child', __name__, url_prefix='/child')
+parent.register_blueprint(child)
+app.register_blueprint(parent)"""

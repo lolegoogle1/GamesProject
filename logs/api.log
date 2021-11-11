@@ -18,3 +18,64 @@ LINE 1: INSERT INTO users (login, password, type) VALUES ('test', '$...
 [SQL: INSERT INTO users (login, password, type) VALUES (%(login)s, %(password)s, %(type)s) RETURNING users.id]
 [parameters: {'login': 'test', 'password': '$2b$12$U3dk/wYxBiAoL9A7vUWgYeWPk05cQD4am7j2qvsBNcWy0kWnSPmo6', 'type': None}]
 (Background on this error at: https://sqlalche.me/e/14/f405)
+2021-11-11 12:21:07,365:WARNING:Signup failed with errors: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "users_login_key"
+DETAIL:  Key (login)=(test) already exists.
+
+[SQL: INSERT INTO users (login, password, type) VALUES (%(login)s, %(password)s, %(type)s) RETURNING users.id]
+[parameters: {'login': 'test', 'password': '$2b$12$BFu3SQZjc6O0bdF7N16uuuuSCI47TqwRztbhWh79JijBWtugUPB4e', 'type': None}]
+(Background on this error at: https://sqlalche.me/e/14/gkpj)
+2021-11-11 12:23:58,787:WARNING:Invalid input params: {'json': {'login': ['Missing data for required field.'], 'name': ['Missing data for required field.'], 'password': ['Missing data for required field.']}}
+2021-11-11 12:25:26,931:WARNING:Invalid input params: {'json': {'login': ['Missing data for required field.'], 'name': ['Missing data for required field.'], 'password': ['Missing data for required field.']}}
+2021-11-11 12:25:28,659:WARNING:Invalid input params: {'json': {'login': ['Missing data for required field.'], 'name': ['Missing data for required field.'], 'password': ['Missing data for required field.']}}
+2021-11-11 12:27:40,911:WARNING:Invalid input params: {'json': {'login': ['Missing data for required field.'], 'password': ['Missing data for required field.'], 'name': ['Missing data for required field.']}}
+2021-11-11 12:32:37,770:WARNING:Invalid input params: {'json': {'name': ['Missing data for required field.'], 'password': ['Missing data for required field.'], 'login': ['Missing data for required field.']}}
+2021-11-11 12:32:40,959:WARNING:Invalid input params: {'json': {'name': ['Missing data for required field.'], 'password': ['Missing data for required field.'], 'login': ['Missing data for required field.']}}
+2021-11-11 12:33:28,319:WARNING:Invalid input params: {'json': {'name': ['Missing data for required field.'], 'password': ['Missing data for required field.'], 'login': ['Missing data for required field.']}}
+2021-11-11 12:34:52,804:WARNING:Invalid input params: {'json': {'name': ['Missing data for required field.'], 'password': ['Missing data for required field.'], 'login': ['Missing data for required field.']}}
+2021-11-11 12:39:36,809:WARNING:Signup failed with errors: (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "users_login_key"
+DETAIL:  Key (login)=(string) already exists.
+
+[SQL: INSERT INTO users (login, password, type) VALUES (%(login)s, %(password)s, %(type)s) RETURNING users.id]
+[parameters: {'login': 'string', 'password': '$2b$12$BW54ci7X12.//OwISMbTtOIK.VxLffdxViHqhIJZBM4g.N5cmwXsu', 'type': None}]
+(Background on this error at: https://sqlalche.me/e/14/gkpj)
+2021-11-11 12:40:24,797:WARNING:Invalid input params: {'json': {'password': ['Missing data for required field.'], 'login': ['Missing data for required field.']}}
+2021-11-11 15:14:29,078:ERROR:Exception on /api/games [GET]
+Traceback (most recent call last):
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/app.py", line 2073, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/app.py", line 1518, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/app.py", line 1516, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/app.py", line 1502, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**req.view_args)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask_apispec/annotations.py", line 122, in wrapped
+    return wrapper(*args, **kwargs)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask_apispec/wrapper.py", line 29, in __call__
+    response = self.call_view(*args, **kwargs)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask_apispec/wrapper.py", line 52, in call_view
+    return self.func(*args, **kwargs)
+  File "/home/oleh/PycharmProjects/GamesProject/app/games/games.py", line 22, in get_games
+    return jsonify(games)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/json/__init__.py", line 355, in jsonify
+    f"{dumps(data, indent=indent, separators=separators)}\n",
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/json/__init__.py", line 133, in dumps
+    rv = _json.dumps(obj, **kwargs)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/home/oleh/PycharmProjects/GamesProject/venv/lib/python3.8/site-packages/flask/json/__init__.py", line 57, in default
+    return super().default(o)
+  File "/usr/lib/python3.8/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type Game is not JSON serializable
+2021-11-11 15:44:41,235:WARNING:Invalid input params: {'json': {'company_id': {'_schema': ['Invalid input type.']}}}
+2021-11-11 15:45:37,906:WARNING:Invalid input params: {'json': {'company_id': {'_schema': ['Invalid input type.']}}}
+2021-11-11 15:47:46,849:WARNING:Invalid input params: {'json': {'company_id': {'_schema': ['Invalid input type.']}}}
+2021-11-11 15:47:52,973:WARNING:Invalid input params: {'json': {'company_id': {'_schema': ['Invalid input type.']}}}
+2021-11-11 15:54:34,390:WARNING:Invalid input params: {'json': {'company_id': {'_schema': ['Invalid input type.']}}}
+2021-11-11 16:10:38,863:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'name': ['Missing data for required field.'], 'release_date': ['Missing data for required field.']}}
+2021-11-11 16:10:49,631:WARNING:Invalid input params: {'json': {'description': ['Missing data for required field.'], 'name': ['Missing data for required field.'], 'release_date': ['Missing data for required field.']}}

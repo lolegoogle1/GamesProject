@@ -117,6 +117,52 @@ class Game(Base):
     reviews = relationship("Review", back_populates="game")
     screenshots = relationship("Screenshot", back_populates="game")
 
+    @classmethod
+    def get_games(cls):
+        try:
+            games = cls.query.all()
+            session.commit()
+            return games
+        except Exception:
+            session.rollback()
+            raise
+
+    @classmethod
+    def get(cls, game_id):
+        try:
+            game = cls.query.filter(Company.id == game_id).first()
+            if not game:
+                raise Exception('No such game!')
+            return game
+        except Exception:
+            session.rollback()
+            raise
+
+    def update(self, **kwargs):
+        try:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+
+    def save(self):
+        try:
+            session.add(self)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+
+    def delete(self):
+        try:
+            session.delete(self)
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise
+
 
 class Screenshot(Base):
     __tablename__ = 'screenshots'
@@ -140,3 +186,9 @@ class Review(Base):
 
     game = relationship("Game", back_populates="reviews")
     user = relationship("User", back_populates="reviews")
+
+
+# TODO
+# Screenshot and review logic
+# Autoincrement problems. Cascade deletion
+# Refactor

@@ -3,13 +3,12 @@ from flask_apispec import marshal_with, use_kwargs
 
 from .. import logger
 from ..models import User
-from ..schemas import UserSchema, AuthSchema
+from .schema import UserSchema, AuthSchema
 
 
-users = Blueprint('users', __name__)
+users = Blueprint('users', __name__, url_prefix='/users')
 
 
-# @doc(tags=['user'])
 @users.route('/login', methods=['POST'])
 @use_kwargs(UserSchema(only=('login', 'password')))
 @marshal_with(AuthSchema)
@@ -25,10 +24,9 @@ def login(**kwargs):
     return {'access_token': access_token}
 
 
-# @doc(tags=['user'])
 @users.route('/signup', methods=['POST'])
-@use_kwargs(UserSchema)
 @marshal_with(AuthSchema)
+@use_kwargs(UserSchema)
 def signup(**kwargs):
     try:
         user = User(**kwargs)
@@ -53,6 +51,4 @@ def error_handler(error):
         return jsonify({'message': messages}), 400
 
 
-# docs.register(signup, blueprint='users')
-# docs.register(login, blueprint='users')
 

@@ -77,3 +77,7 @@ def companies(session):
     session.commit()
 
     return company
+
+# TODO
+# game fixture
+# test_game_model

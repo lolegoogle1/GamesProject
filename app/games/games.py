@@ -1,52 +1,49 @@
-from flask import jsonify, Blueprint
+from flask import Blueprint, jsonify
 from flask_apispec import marshal_with, use_kwargs
-from flask_jwt_extended import jwt_required
 
-from ..models import Company
-from .schema import CompanySchema
+
+from ..models import Game
+from .schema import GameSchema
 from .. import logger
 
+games = Blueprint('games', __name__, url_prefix='/games')
 
-companies = Blueprint('api', __name__, url_prefix='/companies')
 
-
-@companies.route('/', methods=['GET'])
-@marshal_with(CompanySchema(many=True))
-def get_companies():
+@games.route('/', methods=['GET'])
+@marshal_with(GameSchema(many=True))
+def get_games():
     try:
-        companies = Company.get_companies()
+        games = Game.get_games()
     except Exception as error:
         logger.warning(
             f'Read failed with errors: {error}'
         )
         return {'message': str(error)}, 400
-    return companies
+    return games
 
 
-@companies.route('/', methods=['POST'])
-@jwt_required()
-@use_kwargs(CompanySchema)
-@marshal_with(CompanySchema)
-def create_company(**kwargs):
+@games.route('/', methods=['POST'])
+@use_kwargs(GameSchema)
+@marshal_with(GameSchema)
+def create_game(**kwargs):
     try:
-        new_company = Company(**kwargs)
-        new_company.save()
+        new_game = Game(**kwargs)
+        new_game.save()
     except Exception as error:
         logger.warning(
             f'Create failed with errors: {error}'
         )
         return {'message': str(error)}, 400
-    return new_company
+    return new_game
 
 
-@companies.route('/<int:company_id>', methods=['PUT'])
-@jwt_required()
-@use_kwargs(CompanySchema)
-@marshal_with(CompanySchema)
-def update_company(company_id, **kwargs):
+@games.route('/<int:game_id>', methods=['PUT'])
+@use_kwargs(GameSchema)
+@marshal_with(GameSchema)
+def update_game(game_id, **kwargs):
     try:
         print('Inside put')
-        item = Company.get(company_id)
+        item = Game.get(game_id)
         item.update(**kwargs)
     except Exception as error:
         logger.warning(
@@ -56,12 +53,11 @@ def update_company(company_id, **kwargs):
     return item
 
 
-@companies.route('/<int:company_id>', methods=['DELETE'])
-@jwt_required()
-@marshal_with(CompanySchema)
-def delete_company(company_id):
+@games.route('/<int:game_id>', methods=['DELETE'])
+@marshal_with(GameSchema)
+def delete_game(game_id):
     try:
-        item = Company.get(company_id)
+        item = Game.get(game_id)
         item.delete()
     except Exception as error:
         logger.warning(
@@ -71,7 +67,7 @@ def delete_company(company_id):
     return '', 204
 
 
-@companies.errorhandler(422)
+@games.errorhandler(422)
 def error_handler(error):
     headers = error.data.get('headers', None)
     messages = error.data.get('messages', ['Invalid request'])
@@ -80,6 +76,3 @@ def error_handler(error):
         return jsonify({'message': messages}), 400, headers
     else:
         return jsonify({'message': messages}), 400
-
-
-
